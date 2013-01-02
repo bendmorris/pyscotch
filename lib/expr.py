@@ -47,6 +47,7 @@ def convert(value, cls):
     return cls.convert(value)
 
 class Value(Expr):
+    def __str__(self): return repr(self.value)
     @classmethod
     def make(cls, x):
         for value_type in value_types:
@@ -71,27 +72,25 @@ class Value(Expr):
         return Expr.__div__(self, x)
     def eval(self, context=None):
         return self
+class NoneValue(Value):
+    def __init__(self): self.value = None
+    def __str__(self): return 'None'
 class BoolValue(Value):
     converter = bool
     def __init__(self, x):
-        self.value = bool(x)
-    def __str__(self): return '"%s"' % str(self.value).replace('"', '\\"')
+        self.value = bool(x)    
 class IntValue(Value):
     converter = int
-    
     def __init__(self, x):
         self.value = int(x)
-    def __str__(self): return str(self.value)
 class FloatValue(Value):
     converter = float
     def __init__(self, x):
         self.value = float(x)
-    def __str__(self): return str(self.value)
 class StrValue(Value):
     converter = str
     def __init__(self, x):
         self.value = str(x)
-    def __str__(self): return '"%s"' % str(self.value).replace('"', '\\"')
 
 value_types = [BoolValue, IntValue, FloatValue, StrValue]
     
