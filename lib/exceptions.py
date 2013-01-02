@@ -1,0 +1,2 @@
+class ScotchException(Exception):
+    pass
