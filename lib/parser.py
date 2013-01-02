@@ -24,8 +24,12 @@ real = ( Combine(Word(nums) + Optional("." + Word(nums))
          | Combine(Word(nums) + "." + Word(nums))
          )
 real.setParseAction(lambda x: FloatValue(float(''.join(x))))
+true_literal = Suppress("True").setParseAction(lambda x: BoolValue(True))
+false_literal = Suppress("False").setParseAction(lambda x: BoolValue(False))
+none_literal = Suppress("None").setParseAction(lambda x: NoneValue())
+keyword_literal = true_literal | false_literal | none_literal
 literalNumber = real | integer
-value = literalString | literalNumber
+value = keyword_literal | literalString | literalNumber
 
 list_expr = Suppress('[') + Optional(delimitedList(expression), default=[]) + Suppress(']')
 list_expr.setParseAction(lambda x: ListExpr(*x))
