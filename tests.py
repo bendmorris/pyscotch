@@ -16,6 +16,11 @@ def parse_test():
     (1 + 1)
     >>> statement.parseString('1 + (2.0 + 3.0)', parseAll=True)[0]
     (1 + (2.0 + 3.0))
+    >>> a = statement.parseString('1 2 3', parseAll=True)[0]
+    >>> a
+    1 2 3
+    >>> isinstance(a, CurriedExpr)
+    True
     '''
 
 def expr_test():

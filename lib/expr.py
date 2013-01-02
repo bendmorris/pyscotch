@@ -7,7 +7,7 @@ def eval(expr, context=None):
 class Expr(object):
     def __repr__(self): return str(self)
     def eval(self, context=None):
-        raise ScotchException('Expression type not yet implemented: %s' % str(self))
+        raise ScotchException('Expression type not yet implemented: %s' % self.__class__.__name__)
     def generator(self):
         raise ScotchException('This expression type has no generator.')
     def __add__(self, x):
@@ -22,14 +22,15 @@ class Expr(object):
         return eval(expr)
     @classmethod
     def make(cls, *x):
-        if isinstance(x, list) or isinstance(x, tuple):
-            if len(x) > 1:
-                return CurriedExpr(x)
-        return Expr(x)
+        if len(x) > 1:
+            return CurriedExpr(*x)
+        return x[0]
 class CurriedExpr(Expr):
-    def __init__(self, exprs):
+    def __init__(self, *exprs):
         self.exprs = exprs
-    def __str__(self): return ' '.join([str(s) for s in exprs])
+    def __str__(self): return ' '.join([str(s) for s in self.exprs])
+    def eval(self, context=None):
+        return self
 class ExprBlock(Expr):
     def __init__(self, exprs):
         self.exprs = exprs

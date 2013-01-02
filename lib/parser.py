@@ -63,6 +63,7 @@ expression << operatorPrecedence(
     ],
 )
 curried_expr = OneOrMore(expression)
+curried_expr.setParseAction(lambda x: Expr.make(*x))
 command = Word('NOTYETIMPLEMENTED')
 expr_block = (Suppress('{') + OneOrMore(curried_expr | command) + Suppress('}'))
 expr_block.setParseAction(lambda x: ExprBlock(*x))
