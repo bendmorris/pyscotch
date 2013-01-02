@@ -1,10 +1,11 @@
 from lib.expr import *
 from lib.parser import *
+import inspect
 import doctest
 import sys
 
 
-def parse_test():
+def parser_tests():
     '''
     >>> statement.parseString('1', parseAll=True)[0]
     1
@@ -26,7 +27,7 @@ def parse_test():
     [1, 2.0, "three"]
     '''
 
-def expr_test():
+def expr_tests():
     '''
     >>> convert(FloatValue(1.2), IntValue)
     1
@@ -44,4 +45,13 @@ def expr_test():
     pass
     
     
-doctest.testmod()
+def run_tests(verbose=False):
+    doctest.testmod(inspect.getmodule(parser_tests), verbose=verbose)
+
+
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        verbose = eval(sys.argv[1])
+    else: verbose=False
+
+    run_tests(verbose=verbose)
