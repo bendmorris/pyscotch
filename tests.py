@@ -7,24 +7,32 @@ import sys
 
 def parser_tests():
     '''
-    >>> statement.parseString('1', parseAll=True)[0]
+    >>> def parseTest(s):
+    ...     return statement.parseString(s, parseAll=True)[0]
+    >>> parseTest('1')
     1
-    >>> statement.parseString('1.0', parseAll=True)[0]
+    >>> parseTest('1.0')
     1.0
-    >>> statement.parseString('"abc"', parseAll=True)[0]
-    "abc"
-    >>> statement.parseString('1 + 1', parseAll=True)[0]
+    >>> parseTest('"abc"')
+    'abc'
+    >>> parseTest('1 + 1')
     (1 + 1)
-    >>> statement.parseString('1 + (2.0 + 3.0)', parseAll=True)[0]
+    >>> parseTest('1 + (2.0 + 3.0)')
     (1 + (2.0 + 3.0))
-    >>> a = statement.parseString('1(2, 3)', parseAll=True)[0]; print a
+    >>> a = parseTest('1(2, 3)'); print a
     (1 2 3)
     >>> isinstance(a, CurriedExpr)
     True
-    >>> statement.parseString("""{ 1 + 1; 2 + 1 }""", parseAll=True)[0]
+    >>> parseTest("""{ 1 + 1; 2 + 1 }""")
     {(1 + 1); (2 + 1)}
-    >>> statement.parseString("[1, 2.0, 'three']", parseAll=True)[0]
-    [1, 2.0, "three"]
+    >>> parseTest("[1, 2.0, 'three']")
+    [1, 2.0, 'three']
+    >>> parseTest('True')
+    True
+    >>> parseTest('False')
+    False
+    >>> parseTest('None')
+    None
     '''
 
 def expr_tests():
