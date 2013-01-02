@@ -3,13 +3,15 @@ from expr import Expr
 
 default = [
            ]
-    
+
 
 class Scotch(object):
-    def __init__(self, verbose=False):
-        self.verbose = verbose
-    
+    def __init__(self):
         self.reinit()
+        
+        
+    def __call__(self, x):
+        self.parse(text=x)
         
         
     def reinit(self):
@@ -41,3 +43,6 @@ class Scotch(object):
             self.execute(stmt)
         
         return stmts
+        
+        
+scotch = Scotch()

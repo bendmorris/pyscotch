@@ -1,6 +1,6 @@
 import argparse
 import sys
-from lib.scotch import Scotch
+from lib.scotch import scotch
 from lib.exceptions import ScotchException
 import lib.expr as expr
 import sys
@@ -39,7 +39,6 @@ interactive = (not args.file and not args.eval) or args.interactive
 def run():
     if interactive: print '''Scotch %s''' % __version__
 
-    scotch = Scotch()
     for input_file in args.file:
         try:
             scotch.parse(filename=input_file)
