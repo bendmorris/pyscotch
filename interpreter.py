@@ -1,7 +1,8 @@
 import argparse
 import sys
-from lib.graph import Graph
-from lib.types import BeaverException
+from lib.scotch import Scotch
+from lib.exceptions import ScotchException
+import lib.expr as expr
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -10,7 +11,6 @@ from __init__ import __version__
 
 arg_parser = argparse.ArgumentParser()
 arg_parser.add_argument('file', nargs='*', help='file to be interpreted')
-arg_parser.add_argument('-d', '--draw', help='output an image of the resulting graph to the given image file')
 arg_parser.add_argument('-i', '--interactive', help='enter interactive mode after interpreting file', action='store_true')
 arg_parser.add_argument('-e', '--eval', help='string to be evaluated')
 arg_parser.add_argument('-v', '--verbose', help='print each triple statement as evaluated', action='store_true')
@@ -37,18 +37,18 @@ interactive = (not args.file and not args.eval) or args.interactive
 
 
 def run():
-    if interactive: print '''Beaver %s''' % __version__
+    if interactive: print '''Scotch %s''' % __version__
 
-    graph = Graph(verbose=args.verbose)
+    scotch = Scotch()
     for input_file in args.file:
         try:
-            graph.parse(filename=input_file)
+            scotch.parse(filename=input_file)
         except KeyboardInterrupt:
             sys.exit()
         
     if args.eval:
         try:
-            graph.parse(text=args.eval)
+            scotch.parse(text=args.eval)
         except KeyboardInterrupt:
             sys.exit()
     
@@ -57,7 +57,7 @@ def run():
 
         exit = False
         while not exit:
-            graph.verbose = args.verbose
+            scotch.verbose = args.verbose
         
             try:
                 next_line = raw_input('>> ').strip()
@@ -83,9 +83,9 @@ def run():
                 elif next_line in ('exit', 'quit'):
                     exit = True
                 else:
-                    stmts = graph.parse(text=next_line)
+                    stmts = scotch.parse(text=next_line)
                     if stmts == 0:
-                        raise BeaverException('Failed to parse line: %s' % next_line)
+                        raise ScotchException('Failed to parse line: %s' % next_line)
                     
             except EOFError:
                 print
@@ -100,8 +100,4 @@ def run():
                 continue
             
         
-    if args.draw:
-        graph.draw(args.draw)
-    
-    
 if __name__ == '__main__': run()
