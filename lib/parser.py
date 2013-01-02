@@ -41,9 +41,14 @@ def operator_expr(args=None):
     if args is None:
         raise Exception()
         
-    a, op, b = args[0]
+    args = args[0]
+        
+    a, op, b = args[:3]
     
-    try: return ops[op](a,b)
+    try:
+        result = ops[op](a,b)
+        if len(args) > 3: return operator_expr(([result] + args[3:],))
+        return result
     except KeyError: raise
 
 expression << ((operatorPrecedence(

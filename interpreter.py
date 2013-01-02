@@ -95,6 +95,7 @@ def run():
                 continue
                 
             except Exception as e:
+                raise
                 print e
                 continue
             
