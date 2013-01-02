@@ -27,18 +27,8 @@ real.setParseAction(lambda x: FloatValue(float(''.join(x))))
 literalNumber = real | integer
 value = literalString | literalNumber
 
-'''add_expr = expression + Suppress("+") + expression
-add_expr.setParseAction(lambda x, y: AddExpr(x, y))
-sub_expr = expression + Suppress("-") + expression
-sub_expr.setParseAction(lambda x, y: SubExpr(x, y))
-mul_expr = expression + Suppress("*") + expression
-mul_expr.setParseAction(lambda x, y: MulExpr(x, y))
-div_expr = expression + Suppress("/") + expression
-div_expr.setParseAction(lambda x, y: DivExpr(x, y))
-arithmetic = add_expr | sub_expr | mul_expr | div_expr'''
-
 list_expr = Suppress('[') + Optional(delimitedList(expression), default=[]) + Suppress(']')
-
+list_expr.setParseAction(lambda x: ListExpr(*x))
 term = (list_expr | variable | value)
 
 ops = {
@@ -55,20 +45,24 @@ def operator_expr(args=None):
     
     try: return ops[op](a,b)
     except KeyError: raise
-expression << operatorPrecedence(
+
+expression << ((operatorPrecedence(
     term,
     [
         (oneOf('*','/'), 2, opAssoc.LEFT, operator_expr),
         (oneOf('+','-'), 2, opAssoc.LEFT, operator_expr),
     ],
-)
+) + Optional(parens(OneOrMore(delimitedList(expression))))) | parens(OneOrMore(expression)))
+expression.setParseAction(lambda x: Expr.make(*x))
 statement = Forward()
-curried_expr = OneOrMore(expression)
-curried_expr.setParseAction(lambda x: Expr.make(*x))
-command = Word('NOTYETIMPLEMENTED')
+
+
+assignment = expression + Suppress('=') + expression
+assignment.setParseAction(lambda x: AssignExpr(*x))
+command = assignment
 expr_block = (Suppress('{') + OneOrMore(statement) + Suppress('}'))
 expr_block.setParseAction(lambda x: ExprBlock(*x))
-statement << (curried_expr | command | expr_block) + Optional(';').suppress()
+statement << (expression | command | expr_block) + Optional(';').suppress()
 
 def parse_string(string):
     handle = StringIO(string)

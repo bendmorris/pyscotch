@@ -16,13 +16,14 @@ def parse_test():
     (1 + 1)
     >>> statement.parseString('1 + (2.0 + 3.0)', parseAll=True)[0]
     (1 + (2.0 + 3.0))
-    >>> a = statement.parseString('1 2 3', parseAll=True)[0]
-    >>> a
-    1 2 3
+    >>> a = statement.parseString('1(2, 3)', parseAll=True)[0]; print a
+    (1 2 3)
     >>> isinstance(a, CurriedExpr)
     True
     >>> statement.parseString("""{ 1 + 1; 2 + 1 }""", parseAll=True)[0]
     {(1 + 1); (2 + 1)}
+    >>> statement.parseString("[1, 2.0, 'three']", parseAll=True)[0]
+    [1, 2.0, "three"]
     '''
 
 def expr_test():

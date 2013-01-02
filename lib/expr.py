@@ -28,7 +28,7 @@ class Expr(object):
 class CurriedExpr(Expr):
     def __init__(self, *exprs):
         self.exprs = exprs
-    def __str__(self): return ' '.join([str(s) for s in self.exprs])
+    def __str__(self): return '(%s)' %  ' '.join([str(s) for s in self.exprs])
     def eval(self, context=None):
         return self
 class ExprBlock(Expr):
@@ -137,9 +137,17 @@ class DivExpr(Expr):
         x = eval(self.x, context)
         y = eval(self.y, context)
         return x / y
+        
 class ListExpr(Expr):
-    def __init__(self, *elements):
+    def __init__(self, *values):
         self.values = values
     def __str__(self): return '[%s]' % ', '.join([str(s) for s in self.values])
+    def eval(self, context=None):
+        return self
     def generator(self):
         for value in self.values: yield value
+        
+class AssignExpr(Expr):
+    def __init__(self, x, y):
+        self.x, self.y = x, y
+    def __str__(self): return '%s = %s' % (self.x, self.y)
