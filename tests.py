@@ -21,6 +21,8 @@ def parse_test():
     1 2 3
     >>> isinstance(a, CurriedExpr)
     True
+    >>> statement.parseString("""{ 1 + 1; 2 + 1 }""", parseAll=True)[0]
+    {(1 + 1); (2 + 1)}
     '''
 
 def expr_test():

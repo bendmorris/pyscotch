@@ -62,12 +62,13 @@ expression << operatorPrecedence(
         (oneOf('+','-'), 2, opAssoc.LEFT, operator_expr),
     ],
 )
+statement = Forward()
 curried_expr = OneOrMore(expression)
 curried_expr.setParseAction(lambda x: Expr.make(*x))
 command = Word('NOTYETIMPLEMENTED')
-expr_block = (Suppress('{') + OneOrMore(curried_expr | command) + Suppress('}'))
+expr_block = (Suppress('{') + OneOrMore(statement) + Suppress('}'))
 expr_block.setParseAction(lambda x: ExprBlock(*x))
-statement = (curried_expr | expr_block | command) + Optional(';').suppress()
+statement << (curried_expr | command | expr_block) + Optional(';').suppress()
 
 def parse_string(string):
     handle = StringIO(string)

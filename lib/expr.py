@@ -32,7 +32,7 @@ class CurriedExpr(Expr):
     def eval(self, context=None):
         return self
 class ExprBlock(Expr):
-    def __init__(self, exprs):
+    def __init__(self, *exprs):
         self.exprs = exprs
     def __str__(self): return '{%s}' % '; '.join([str(x) for x in self.exprs])
     def eval(self, context=None):
